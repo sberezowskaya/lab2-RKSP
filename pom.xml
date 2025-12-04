@@ -6,7 +6,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.5.8</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 	<groupId>ru.igumnova</groupId>
 	<artifactId>data-service</artifactId>
@@ -94,6 +94,14 @@
 			<artifactId>jackson-databind-nullable</artifactId>
 			<version>0.2.6</version>
 		</dependency>
+
+		<!-- OpenAPI конфигурация -->
+		<dependency>
+			<groupId>org.openapitools</groupId>
+			<artifactId>openapi-generator-core</artifactId>
+			<version>7.15.0</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
@@ -132,6 +140,7 @@
 				<artifactId>openapi-generator-maven-plugin</artifactId>
 				<version>7.15.0</version>
 				<executions>
+					<!-- Существующий execution для data-service -->
 					<execution>
 						<id>generate-api</id>
 						<goals>
@@ -143,6 +152,28 @@
 							<output>${project.build.directory}/generated-sources/openapi</output>
 							<apiPackage>ru.igumnova.data_service.api</apiPackage>
 							<modelPackage>ru.igumnova.data_service.model</modelPackage>
+							<configOptions>
+								<interfaceOnly>true</interfaceOnly>
+								<useJakartaEe>true</useJakartaEe>
+								<dateLibrary>java8</dateLibrary>
+								<useTags>true</useTags>
+								<library>spring-boot</library>
+								<generateSpringApplication>false</generateSpringApplication>
+							</configOptions>
+						</configuration>
+					</execution>
+
+					<execution>
+						<id>generate-gate-api</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<inputSpec>${project.basedir}/src/main/resources/openapi-gate.yaml</inputSpec>
+							<generatorName>spring</generatorName>
+							<output>${project.build.directory}/generated-sources/openapi-gate</output>
+							<apiPackage>ru.igumnova.gate_service.api</apiPackage>
+							<modelPackage>ru.igumnova.gate_service.model</modelPackage>
 							<configOptions>
 								<interfaceOnly>true</interfaceOnly>
 								<useJakartaEe>true</useJakartaEe>
@@ -171,6 +202,8 @@
 						<configuration>
 							<sources>
 								<source>${project.build.directory}/generated-sources/openapi/src/main/java</source>
+								<source>${project.build.directory}/generated-sources/openapi-gate/src/main/java</source>
+								<source>${project.build.directory}/generated-sources/openapi-feign/src/main/java</source>
 							</sources>
 						</configuration>
 					</execution>

@@ -3,7 +3,10 @@ server:
 
 spring:
   application:
-    name: data-service
+  cloud:
+    compatibility-verifier:
+      enabled: false
+
 
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
